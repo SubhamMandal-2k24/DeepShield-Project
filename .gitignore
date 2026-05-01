@@ -1,0 +1,19 @@
+venv/
+node_modules/
+__pycache__/
+
+# Dataset
+Frames/
+Data/
+
+# Models
+Models/
+
+# Files
+*.jpg
+*.png
+*.mp4
+*.pth
+*.h5
+
+.vscode/
