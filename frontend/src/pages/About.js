@@ -182,10 +182,10 @@ function About() {
         </AnimatedText>
         <AnimatedText delay={0.1}>
           <GlassCard className="developer-card">
-            <div className="developer-avatar">SM</div>
+            <img src="/images/Subham.jpeg" alt="Subham Mandal" className="developer-avatar-img" />
             <div>
               <h3>Subham Mandal</h3>
-              <p className="developer-role">B.Tech Computer Science (Data Science)</p>
+              <p className="developer-role">B.Tech Computer Science and Engineering (Data Science)</p>
               <p className="developer-bio">
                 Focused on building next-generation AI-powered applications and
                 scalable backend systems. Specializes in system design, data

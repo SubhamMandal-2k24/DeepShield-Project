@@ -189,3 +189,12 @@
     text-align: center;
   }
 }
+
+.developer-avatar-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  flex-shrink: 0;
+}

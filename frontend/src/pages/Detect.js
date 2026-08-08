@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
 import GlassCard from "../components/GlassCard";
 import Footer from "../components/Footer";
+import { useAuth } from "../context/AuthContext";
 import "./Detect.css";
 
 function Detect() {
@@ -13,6 +14,7 @@ function Detect() {
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef(null);
+  const { token } = useAuth();
 
   useEffect(() => {
     return () => {
@@ -63,6 +65,9 @@ function Detect() {
 
       const response = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
@@ -81,6 +86,7 @@ function Detect() {
       setLoading(false);
     }
   };
+
   const handleReset = () => {
     if (preview) URL.revokeObjectURL(preview);
     setFile(null);

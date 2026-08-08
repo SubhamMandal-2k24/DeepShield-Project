@@ -261,3 +261,30 @@ code {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.nav-username {
+  margin-left: 20px;
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.nav-logout-btn {
+  margin-left: 16px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.nav-logout-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-logout-btn.mobile {
+  margin: 10px 0;
+}

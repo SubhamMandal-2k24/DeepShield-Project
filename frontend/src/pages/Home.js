@@ -15,6 +15,7 @@ function Home() {
     <div>
       {/* 1. HERO */}
       <section className="hero">
+        <div className="hero-grid" />
         <HeroScene />
         <div className="hero-content">
           <AnimatedText as="span" className="eyebrow">
@@ -26,19 +27,55 @@ function Home() {
           <AnimatedText as="p" delay={0.2}>
             Upload a video or image and let AI analyze authenticity in seconds.
           </AnimatedText>
-          <motion.button
-            className="primary-btn"
-            onClick={() => navigate("/detect")}
+
+          <motion.div
+            className="hero-actions"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.35 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
           >
-            Try Now
-          </motion.button>
+            <motion.button
+              className="primary-btn"
+              onClick={() => navigate("/detect")}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Try Now
+            </motion.button>
+            <motion.button
+              className="ghost-btn"
+              onClick={() => navigate("/about")}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Learn More
+            </motion.button>
+          </motion.div>
+
+          <motion.div
+            className="hero-badges"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <span className="hero-badge">
+              <span className="badge-dot" /> ResNet50 Powered
+            </span>
+            <span className="hero-badge">
+              <span className="badge-dot pink" /> Frame-Level Analysis
+            </span>
+          </motion.div>
         </div>
+
+        <motion.div
+          className="scroll-indicator"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <span />
+        </motion.div>
       </section>
 
       {/* 2. HOW IT WORKS */}
@@ -63,13 +100,33 @@ function Home() {
         </div>
       </section>
 
-      {/* 3. STATS */}
+     {/* 3. WHY IT'S RELIABLE */}
       <section className="section stats-section">
+        <AnimatedText as="h2" className="section-title">
+          Why It's Reliable
+        </AnimatedText>
+
         <div className="stats-grid">
-          <Counter to={99} suffix="%" label="Detection Accuracy" />
-          <Counter to={12000} suffix="+" label="Scans Completed" />
-          <Counter to={3} suffix="" label="AI Models Combined" />
-          <Counter to={2} suffix="s" label="Avg. Analysis Time" />
+          <Counter to={95} suffix="%" label="Detection Accuracy" />
+          <Counter to={1200} suffix="+" label="Scans Completed" />
+          <Counter to={1} suffix="" label="AI Model (ResNet50)" />
+          <Counter to={7} suffix="s" label="Avg. Analysis Time" />
+        </div>
+
+        <div className="stats-grid stats-grid-secondary">
+          {[
+            { label: "Architecture", value: "ResNet50" },
+            { label: "Training Data", value: "FaceForensics++" },
+            { label: "Analysis Method", value: "Frame-Level" },
+            { label: "Framework", value: "PyTorch" },
+          ].map((item, i) => (
+            <AnimatedText key={item.label} delay={i * 0.1}>
+              <div className="stat-item">
+                <h2 className="stat-number stat-text">{item.value}</h2>
+                <p className="stat-label">{item.label}</p>
+              </div>
+            </AnimatedText>
+          ))}
         </div>
       </section>
 

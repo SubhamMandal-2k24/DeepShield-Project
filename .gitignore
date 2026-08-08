@@ -17,3 +17,4 @@ Models/
 *.h5
 
 .vscode/
+.env
