@@ -1,226 +1,192 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
 import GlassCard from "../components/GlassCard";
 import Footer from "../components/Footer";
+import ContactScene from "../components/ContactScene";
 import "./Contact.css";
 
+const roles = [
+  "Full-Stack Engineer",
+  "Deep Learning Practitioner",
+  "AI/ML Builder",
+];
+
+const contactMethods = [
+  {
+    label: "Phone",
+    value: "+91 7488074287",
+    href: "tel:+917488074287",
+    icon: "TEL",
+    copyValue: "+917488074287",
+  },
+  {
+    label: "Email",
+    value: "2k24.csds1d.2413905@gmail.com",
+    href: "mailto:2k24.csds1d.2413905@gmail.com",
+    icon: "MAIL",
+    copyValue: "2k24.csds1d.2413905@gmail.com",
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin.com/in/subham-mandal-215383343",
+    href: "https://www.linkedin.com/in/subham-mandal-215383343",
+    icon: "in",
+    external: true,
+  },
+  {
+    label: "GitHub",
+    value: "github.com/SubhamMandal-2k24",
+    href: "https://github.com/SubhamMandal-2k24",
+    icon: "GH",
+    external: true,
+  },
+];
+
 function Contact() {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [copiedLabel, setCopiedLabel] = useState("");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleCopy = (label, value) => {
+    navigator.clipboard.writeText(value);
+    setCopiedLabel(label);
+    setTimeout(() => setCopiedLabel(""), 1500);
+  };
+
   return (
     <div className="contact-page">
-
-      {/* =========================
-          INTRO
-      ========================== */}
       <section className="contact-intro">
-        <AnimatedText className="contact-intro-content">
-
-          <p className="eyebrow">
+        <ContactScene />
+        <div className="contact-intro-content">
+          <AnimatedText as="span" className="eyebrow">
             GET IN TOUCH
-          </p>
+          </AnimatedText>
+          <AnimatedText as="h1" delay={0.1}>
+            Let's build something <span className="text-gradient">together</span>
+          </AnimatedText>
 
-          <h1>
-            Let's build something together
-          </h1>
-
-          <p className="contact-intro-text">
-            Whether it's a question about DeepShield, feedback on the project,
-            or an idea for a collaboration — I'd love to hear from you.
-          </p>
-
-          <div className="contact-status">
-            <span className="status-dot"></span>
-            Open to opportunities
+          <div className="rotating-role">
+            <span>Currently working as a</span>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={roles[roleIndex]}
+                className="rotating-role-text"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+              >
+                {roles[roleIndex]}
+              </motion.span>
+            </AnimatePresence>
           </div>
 
-        </AnimatedText>
+          <AnimatedText delay={0.3}>
+            <span className="availability-badge">
+              <span className="availability-dot"></span>
+              Open to opportunities
+            </span>
+          </AnimatedText>
+        </div>
       </section>
 
-
-      {/* =========================
-          PROFILE + QUICK FACTS
-      ========================== */}
       <section className="contact-body">
-
-        {/* PROFILE CARD */}
-        <AnimatedText
-          delay={0.1}
-          className="contact-info-wrap"
-        >
+        <AnimatedText delay={0.1} className="contact-info-wrap">
           <GlassCard className="contact-info-card">
-
             <img
               src="/images/Subham.jpeg"
               alt="Subham Mandal"
               className="contact-avatar-img"
             />
-
-            <h3>
-              Subham Mandal
-            </h3>
-
+            <h3>Subham Mandal</h3>
             <p className="contact-role">
-              Full-Stack Engineer · Deep Learning Practitioner
+              Full-Stack Engineer &middot; Deep Learning Practitioner
             </p>
-
-
-            {/* CONTACT DETAILS */}
-            <div className="contact-details">
-
-              {/* PHONE */}
-              <div className="contact-detail-item">
-
-                <span className="contact-detail-label">
-                  Phone
-                </span>
-
-                <a href="tel:+917488074287">
-                  +91 7488074287
-                </a>
-
-              </div>
-
-
-              {/* EMAIL */}
-              <div className="contact-detail-item">
-
-                <span className="contact-detail-label">
-                  Email
-                </span>
-
-                <a href="mailto:2k24.csds1d.2413905@gmail.com">
-                  2k24.csds1d.2413905@gmail.com
-                </a>
-
-              </div>
-
-
-              {/* LINKEDIN */}
-              <div className="contact-detail-item">
-
-                <span className="contact-detail-label">
-                  LinkedIn
-                </span>
-
-                <a
-                  href="https://www.linkedin.com/in/subham-mandal-215383343"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  linkedin.com/in/subham-mandal-215383343
-                </a>
-
-              </div>
-
-
-              {/* GITHUB */}
-              <div className="contact-detail-item">
-
-                <span className="contact-detail-label">
-                  GitHub
-                </span>
-
-                <a
-                  href="https://github.com/SubhamMandal-2k24"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  github.com/SubhamMandal-2k24
-                </a>
-
-              </div>
-
-            </div>
-
           </GlassCard>
         </AnimatedText>
 
+        <div className="contact-methods-grid">
+          {contactMethods.map((method, i) => {
+            const isExternal = method.external === true;
+            return (
+              <AnimatedText key={method.label} delay={0.15 + i * 0.08}>
+                <GlassCard className="contact-method-card">
+                  <div className="contact-method-top">
+                    <span className="contact-method-icon">{method.icon}</span>
+                    <span className="contact-method-label">{method.label}</span>
+                  </div>
 
-        {/* QUICK FACTS */}
-        <AnimatedText
-          delay={0.2}
-          className="quick-facts-wrap"
-        >
+                  {isExternal ? (
+                    <a
+                      href={method.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="contact-method-value"
+                    >
+                      {method.value}
+                    </a>
+                  ) : (
+                    <a href={method.href} className="contact-method-value">
+                      {method.value}
+                    </a>
+                  )}
 
-          <GlassCard className="quick-facts-card">
-
-            <h4>
-              Quick facts
-            </h4>
-
-            <ul className="quick-facts-list">
-
-              <li>
-                <span className="fact-icon">
-                  ◈
-                </span>
-
-                Builder of DeepShield — AI deepfake detection platform
-              </li>
-
-              <li>
-                <span className="fact-icon">
-                  ◈
-                </span>
-
-                Comfortable across the stack: React, FastAPI, MySQL
-              </li>
-
-              <li>
-                <span className="fact-icon">
-                  ◈
-                </span>
-
-                Focused on applied deep learning &amp; computer vision
-              </li>
-
-              <li>
-                <span className="fact-icon">
-                  ◈
-                </span>
-
-                Usually replies within 24 hours
-              </li>
-
-            </ul>
-
-          </GlassCard>
-
-        </AnimatedText>
-
+                  {method.copyValue ? (
+                    <button
+                      className="copy-btn"
+                      onClick={() => handleCopy(method.label, method.copyValue)}
+                    >
+                      {copiedLabel === method.label ? "Copied!" : "Copy"}
+                    </button>
+                  ) : null}
+                </GlassCard>
+              </AnimatedText>
+            );
+          })}
+        </div>
       </section>
 
+      <section className="quick-facts-section">
+        <AnimatedText as="h2" className="section-title">
+          A bit more about my work
+        </AnimatedText>
+        <div className="quick-facts-grid">
+          {[
+            { icon: "1", text: "Builder of DeepShield, an AI deepfake detection platform" },
+            { icon: "2", text: "Comfortable across the stack: React, FastAPI, MySQL" },
+            { icon: "3", text: "Focused on applied deep learning and computer vision" },
+            { icon: "4", text: "Usually replies within 24 hours" },
+          ].map((fact, i) => (
+            <AnimatedText key={fact.text} delay={i * 0.1}>
+              <GlassCard className="fact-card">
+                <span className="fact-card-icon">{fact.icon}</span>
+                <p>{fact.text}</p>
+              </GlassCard>
+            </AnimatedText>
+          ))}
+        </div>
+      </section>
 
-      {/* =========================
-          CLOSING CTA
-      ========================== */}
       <section className="contact-cta-section">
-
-        <AnimatedText
-          as="h2"
-          className="section-title"
-        >
+        <AnimatedText as="h2" className="section-title">
           Curious how DeepShield works?
         </AnimatedText>
-
-
         <AnimatedText delay={0.1}>
-
           <p className="contact-cta-text">
             Take a look under the hood, or try the detector yourself.
           </p>
-
         </AnimatedText>
-
-
         <AnimatedText delay={0.2}>
-
           <div className="contact-cta-buttons">
-
-            {/* ABOUT BUTTON */}
             <Link to="/about">
-
               <motion.button
                 className="ghost-btn"
                 whileHover={{ scale: 1.05 }}
@@ -228,13 +194,8 @@ function Contact() {
               >
                 Read the Case Study
               </motion.button>
-
             </Link>
-
-
-            {/* DETECT BUTTON */}
             <Link to="/detect">
-
               <motion.button
                 className="primary-btn"
                 whileHover={{ scale: 1.05 }}
@@ -242,21 +203,12 @@ function Contact() {
               >
                 Try DeepShield
               </motion.button>
-
             </Link>
-
           </div>
-
         </AnimatedText>
-
       </section>
 
-
-      {/* =========================
-          FOOTER
-      ========================== */}
       <Footer />
-
     </div>
   );
 }

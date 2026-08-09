@@ -175,29 +175,6 @@ function About() {
         </AnimatedText>
       </section>
 
-      {/* DEVELOPER */}
-      <section className="about-section developer-section">
-        <AnimatedText as="h2" className="section-title">
-          About the developer
-        </AnimatedText>
-        <AnimatedText delay={0.1}>
-          <GlassCard className="developer-card">
-            <img src="/images/Subham.jpeg" alt="Subham Mandal" className="developer-avatar-img" />
-            <div>
-              <h3>Subham Mandal</h3>
-              <p className="developer-role">B.Tech Computer Science and Engineering (Data Science)</p>
-              <p className="developer-bio">
-                Focused on building next-generation AI-powered applications and
-                scalable backend systems. Specializes in system design, data
-                structures &amp; algorithms, and practical AI integration — aiming to
-                deliver intelligent, production-ready solutions that tackle real-world
-                challenges in innovative ways.
-              </p>
-            </div>
-          </GlassCard>
-        </AnimatedText>
-      </section>
-
       <section className="about-cta">
         <AnimatedText as="h2" className="section-title">
           Ready to see it in action?
