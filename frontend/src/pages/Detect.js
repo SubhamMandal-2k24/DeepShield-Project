@@ -125,7 +125,6 @@ function Detect() {
           >
             <div className="detect-hero-image-wrap">
               <img src={heroScan} alt="AI facial analysis scan" />
-              <div className="scan-line" />
             </div>
           </motion.div>
         </div>
