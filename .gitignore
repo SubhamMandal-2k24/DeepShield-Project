@@ -8,13 +8,23 @@ Data/
 
 # Models
 Models/
-
-# Files
-*.jpg
-*.png
-*.mp4
 *.pth
 *.h5
+
+# Uploads (user-submitted files, not source assets)
+uploads/
+*.mp4
+
+# Ignore all images by default...
+*.jpg
+*.png
+
+# ...but allow frontend assets/public images
+!frontend/src/assets/**/*.jpg
+!frontend/src/assets/**/*.png
+!frontend/public/**/*.jpg
+!frontend/public/**/*.png
+!frontend/src/logo.png
 
 .vscode/
 .env
