@@ -4,6 +4,8 @@ import AnimatedText from "../components/AnimatedText";
 import GlassCard from "../components/GlassCard";
 import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
+import heroScan from "../assets/images/hero-scan.jpg";
+import neuralNetwork from "../assets/images/neural-network.jpg";
 import "./Detect.css";
 
 function Detect() {
@@ -99,18 +101,34 @@ function Detect() {
     <div className="detect-page">
       {/* 1. INTRO */}
       <section className="detect-intro">
-        <AnimatedText as="span" className="eyebrow">
-          AI ANALYSIS ENGINE
-        </AnimatedText>
-        <AnimatedText as="h1" delay={0.1}>
-          Detect what's <span className="text-gradient">real</span>
-        </AnimatedText>
-        <AnimatedText delay={0.2}>
-          <p className="detect-intro-text">
-            Upload a video or image below. Our model analyzes it frame by
-            frame and returns a confidence-scored verdict in seconds.
-          </p>
-        </AnimatedText>
+        <div className="detect-intro-grid">
+          <div className="detect-intro-text-col">
+            <AnimatedText as="span" className="eyebrow">
+              AI ANALYSIS ENGINE
+            </AnimatedText>
+            <AnimatedText as="h1" delay={0.1}>
+              Detect what's <span className="text-gradient">real</span>
+            </AnimatedText>
+            <AnimatedText delay={0.2}>
+              <p className="detect-intro-text">
+                Upload a video or image below. Our model analyzes it frame by
+                frame and returns a confidence-scored verdict in seconds.
+              </p>
+            </AnimatedText>
+          </div>
+
+          <motion.div
+            className="detect-intro-image-col"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <div className="detect-hero-image-wrap">
+              <img src={heroScan} alt="AI facial analysis scan" />
+              <div className="scan-line" />
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* 2. UPLOAD TOOL */}
@@ -212,6 +230,17 @@ function Detect() {
         <AnimatedText as="h2" className="section-title">
           What happens after you upload
         </AnimatedText>
+
+        <motion.div
+          className="how-it-works-banner"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <img src={neuralNetwork} alt="Neural network analyzing data" />
+        </motion.div>
+
         <div className="mini-steps">
           {[
             { step: "01", title: "Frame extraction", desc: "Key frames are pulled from your file using OpenCV." },

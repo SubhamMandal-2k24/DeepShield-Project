@@ -9,7 +9,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { token, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -26,20 +26,15 @@ function Navbar() {
     navigate("/");
   };
 
-  const baseLinks = [
+  const protectedLinks = [
     { to: "/", label: "Home" },
     { to: "/about", label: "About" },
     { to: "/detect", label: "Detect" },
+    { to: "/history", label: "History" },
+    { to: "/contact", label: "Contact" },
   ];
 
-  const authLinks = user
-    ? [
-        { to: "/history", label: "History" },
-        { to: "/contact", label: "Contact" },
-      ]
-    : [];
-
-  const allLinks = [...baseLinks, ...authLinks];
+  const allLinks = token ? protectedLinks : [];
 
   return (
     <nav
@@ -60,13 +55,10 @@ function Navbar() {
             {link.label}
           </Link>
         ))}
-        {user ? (
-          <>
-            <span className="nav-username">{user.name}</span>
-            <button className="nav-logout-btn" onClick={handleLogout}>
-              Logout
-            </button>
-          </>
+        {token ? (
+          <button className="nav-logout-btn" onClick={handleLogout}>
+            Logout
+          </button>
         ) : (
           <>
             <Link to="/login">Login</Link>
@@ -99,9 +91,9 @@ function Navbar() {
                 {link.label}
               </Link>
             ))}
-            {user ? (
+            {token ? (
               <button className="nav-logout-btn mobile" onClick={handleLogout}>
-                Logout ({user.name})
+                Logout
               </button>
             ) : (
               <>

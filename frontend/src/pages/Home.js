@@ -6,7 +6,26 @@ import GlassCard from "../components/GlassCard";
 import AnimatedText from "../components/AnimatedText";
 import Counter from "../components/Counter";
 import Footer from "../components/Footer";
+import homeHero from "../assets/images/home-hero.jpg";
+import homeComparison from "../assets/images/home-comparison.jpg";
 import "./Home.css";
+
+function HomeImageBanner({ src, alt, withScanLine }) {
+  return (
+    <motion.div
+      className="home-banner"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <div className="home-banner-wrap">
+        <img src={src} alt={alt} />
+        {withScanLine && <div className="scan-line" />}
+      </div>
+    </motion.div>
+  );
+}
 
 function Home() {
   const navigate = useNavigate();
@@ -78,6 +97,12 @@ function Home() {
         </motion.div>
       </section>
 
+      <HomeImageBanner
+        src={homeHero}
+        alt="Real versus deepfake facial analysis"
+        withScanLine
+      />
+
       {/* 2. HOW IT WORKS */}
       <section className="section cards-section">
         <AnimatedText as="h2" className="section-title">
@@ -129,6 +154,11 @@ function Home() {
           ))}
         </div>
       </section>
+
+      <HomeImageBanner
+        src={homeComparison}
+        alt="Authentic versus manipulated media comparison"
+      />
 
       {/* 4. LIVE DEMO PREVIEW */}
       <section className="section demo-section">

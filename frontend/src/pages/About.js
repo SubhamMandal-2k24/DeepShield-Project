@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
 import GlassCard from "../components/GlassCard";
 import Footer from "../components/Footer";
+import aboutMission from "../assets/images/about-mission.jpg";
+import aboutTechnology from "../assets/images/about-technology.jpg";
+import aboutTeam from "../assets/images/about-team.jpg";
 import "./About.css";
 
 const methodology = [
@@ -32,6 +35,23 @@ const architecture = [
   "UI Display",
 ];
 
+function AboutImageBanner({ src, alt, withScanLine }) {
+  return (
+    <motion.div
+      className="about-banner"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
+      <div className="about-banner-wrap">
+        <img src={src} alt={alt} />
+        {withScanLine && <div className="scan-line" />}
+      </div>
+    </motion.div>
+  );
+}
+
 function About() {
   return (
     <div className="about-page">
@@ -53,6 +73,12 @@ function About() {
           </p>
         </AnimatedText>
       </section>
+
+      <AboutImageBanner
+        src={aboutMission}
+        alt="AI-powered deepfake analysis command center"
+        withScanLine
+      />
 
       {/* OBJECTIVE */}
       <section className="about-section">
@@ -92,6 +118,11 @@ function About() {
           </GlassCard>
         </AnimatedText>
       </section>
+
+      <AboutImageBanner
+        src={aboutTechnology}
+        alt="Biometric iris scan technology"
+      />
 
       {/* METHODOLOGY TIMELINE */}
       <section className="about-section methodology-section">
@@ -152,6 +183,11 @@ function About() {
           ))}
         </div>
       </section>
+
+      <AboutImageBanner
+        src={aboutTeam}
+        alt="Digital identity and AI network visualization"
+      />
 
       {/* SOCIETAL IMPACT */}
       <section className="about-section">
