@@ -7,8 +7,8 @@ Frames/
 Data/
 
 # Models
-Models/
-*.pth
+!Models/
+!Models/*.pth
 *.h5
 
 # Uploads (user-submitted files, not source assets)
@@ -28,3 +28,5 @@ uploads/
 
 .vscode/
 .env
+
+certs/

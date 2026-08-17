@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext(null);
-const API_BASE = "http://127.0.0.1:8000";
-
+const API_BASE = process.env.REACT_APP_API_BASE || "http://127.0.0.1:8000";
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [user, setUser] = useState(null);
