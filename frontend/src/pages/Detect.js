@@ -65,8 +65,8 @@ function Detect() {
       setLoading(true);
       setResult("");
 
-      const response = await fetch("http://127.0.0.1:8000/predict", {
-        method: "POST",
+      const API_BASE = process.env.REACT_APP_API_BASE || "http://127.0.0.1:8000";
+      const response = await fetch(`${API_BASE}/predict`, {        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
