@@ -39,12 +39,14 @@ function History() {
   }, [token]);
 
   const formatDate = (isoString) => {
-    const date = new Date(isoString);
-    return date.toLocaleString(undefined, {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-  };
+  // Ensure the string is treated as UTC if no timezone info is present
+  const utcString = isoString.endsWith("Z") ? isoString : isoString + "Z";
+  const date = new Date(utcString);
+  return date.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
 
   return (
     <div className="history-page">
