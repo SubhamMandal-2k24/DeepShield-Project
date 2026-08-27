@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
 import GlassCard from "../components/GlassCard";
 import Footer from "../components/Footer";
-import { useAuth } from "../context/AuthContext";
+import { useAuth, API_BASE } from "../context/AuthContext";
 import heroScan from "../assets/images/hero-scan.jpg";
 import neuralNetwork from "../assets/images/neural-network.jpg";
 import "./Detect.css";
@@ -65,7 +65,6 @@ function Detect() {
       setLoading(true);
       setResult("");
 
-      const API_BASE = process.env.REACT_APP_API_BASE || "http://127.0.0.1:8000";
       const response = await fetch(`${API_BASE}/predict`, {        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
