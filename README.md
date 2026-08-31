@@ -241,3 +241,4 @@ B.Tech CSE (Data Science), Pranveer Singh Institute of Technology, Kanpur
 
 - GitHub: [@SubhamMandal-2k24](https://github.com/SubhamMandal-2k24)
 - LinkedIn: [linkedin.com/in/subham-mandal-215383343](https://linkedin.com/in/subham-mandal-215383343)
+- Email: [2k24.csds1d.2413905@gmail.com](mailto:2k24.csds1d.2413905@gmail.com)
