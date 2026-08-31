@@ -4,6 +4,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 import shutil
 import os
+import uuid
+import tempfile
 
 from src.predict import predict_file
 from database import engine, Base, get_db
@@ -62,31 +64,55 @@ def get_me(current_user: db_models.User = Depends(get_current_user)):
     return current_user
 
 
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".mp4", ".mov", ".avi", ".webm"}
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
+
+
 @app.post("/predict")
 async def predict(
     file: UploadFile = File(...),
     current_user: db_models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    file_location = f"temp_{file.filename}"
+    # Keep only the extension from the client-supplied name; never trust
+    # the rest of it for building filesystem paths.
+    original_name = file.filename or "upload"
+    ext = os.path.splitext(original_name)[1].lower()
 
-    with open(file_location, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(status_code=400, detail=f"Unsupported file type: {ext or 'unknown'}")
 
-    label, confidence = predict_file(file_location)
+    # Generate our own safe on-disk name (also fixes the old collision bug,
+    # where two users uploading "video.mp4" at once shared one temp file).
+    safe_name = f"{uuid.uuid4().hex}{ext}"
 
-    # Save permanently in user's folder
-    user_folder = f"uploads/user_{current_user.id}"
-    os.makedirs(user_folder, exist_ok=True)
-    permanent_path = os.path.join(user_folder, file.filename)
-    shutil.copy(file_location, permanent_path)
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
+        size = 0
+        while chunk := await file.read(1024 * 1024):
+            size += len(chunk)
+            if size > MAX_FILE_SIZE:
+                tmp.close()
+                os.remove(tmp.name)
+                raise HTTPException(status_code=413, detail="File too large (max 50MB)")
+            tmp.write(chunk)
+        file_location = tmp.name
 
-    os.remove(file_location)
+    try:
+        label, confidence = predict_file(file_location)
 
-    # Log to database
+        # Save permanently in user's folder, under our generated safe name
+        user_folder = os.path.join("uploads", f"user_{current_user.id}")
+        os.makedirs(user_folder, exist_ok=True)
+        permanent_path = os.path.join(user_folder, safe_name)
+        shutil.copy(file_location, permanent_path)
+    finally:
+        os.remove(file_location)
+
+    # Log to database — original_name is stored only for display, never
+    # used to build a filesystem path
     scan = db_models.Scan(
         user_id=current_user.id,
-        filename=file.filename,
+        filename=original_name,
         file_path=permanent_path,
         result=label,
         confidence=confidence,
