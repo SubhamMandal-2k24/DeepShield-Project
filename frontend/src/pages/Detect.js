@@ -148,6 +148,7 @@ function Detect() {
             >
               <input
                 type="file"
+                accept="image/jpeg,image/png,video/mp4,video/quicktime,video/webm"
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 style={{ display: "none" }}
