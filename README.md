@@ -88,10 +88,11 @@ DeepShield is a full-stack web application that uses deep learning to detect AI-
 
 | Metric | Value |
 |---|---|
-| Accuracy | ~95% |
-| Inference Time | ~7 seconds per sample |
+| Accuracy | 74.88% (held-out validation split, 800 samples) |
+| Inference Time (local) | ~7 seconds per sample |
+| Inference Time (live demo) | ~25-90 seconds, depending on Render free-tier cold start |
 | Training Data | FaceForensics++ |
-| Architecture | ResNet50 (fine-tuned) |
+| Architecture | ResNet50 (fine-tuned, 3 epochs) |
 
 > **Note:** The model is trained on FaceForensics++ and performs best on face-forgery-style deepfakes. Performance on out-of-distribution content (e.g., diffusion-generated images) may vary, since these differ significantly from the training distribution.
 

@@ -132,10 +132,10 @@ function Home() {
         </AnimatedText>
 
         <div className="stats-grid">
-          <Counter to={95} suffix="%" label="Detection Accuracy" />
-          <Counter to={1200} suffix="+" label="Scans Completed" />
+          <Counter to={75} suffix="%" label="Detection Accuracy" />
+          <Counter to={800} suffix="+" label="Scans Completed" />
           <Counter to={1} suffix="" label="AI Model (ResNet50)" />
-          <Counter to={7} suffix="s" label="Avg. Analysis Time" />
+          <Counter to={30} suffix="s" label="Avg. Analysis Time" />
         </div>
 
         <div className="stats-grid stats-grid-secondary">
