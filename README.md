@@ -2,7 +2,7 @@
 
 **AI-Powered Deepfake Detection Web Application**
 
-DeepShield is a full-stack web application that uses deep learning to detect AI-generated and manipulated (deepfake) media. It combines a ResNet50-based classifier trained on FaceForensics++ with a modern React frontend and a secure FastAPI backend, giving users a simple interface to upload media and receive real-time authenticity predictions.
+DeepShield is a full-stack web application that uses deep learning to detect manipulated (deepfake) media. It combines a ResNet50-based classifier trained on FaceForensics++ with a modern React frontend and a secure FastAPI backend, giving users a simple interface to upload media and receive real-time authenticity predictions.
 
 **Live Demo:** [deep-shield-project.vercel.app](https://deep-shield-project.vercel.app)
 
