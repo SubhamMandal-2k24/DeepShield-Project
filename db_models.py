@@ -23,7 +23,6 @@ class Scan(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     filename = Column(String(255), nullable=False)
-    file_path = Column(String(500), nullable=False)
     result = Column(String(10), nullable=False)
     confidence = Column(Float, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))

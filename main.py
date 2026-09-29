@@ -1,10 +1,10 @@
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.concurrency import run_in_threadpool
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-import shutil
+import logging
 import os
-import uuid
 import tempfile
 
 from src.predict import predict_file
@@ -12,6 +12,8 @@ from database import engine, Base, get_db
 import db_models
 import schemas
 from auth import hash_password, verify_password, create_access_token, get_current_user
+
+logger = logging.getLogger("deepshield")
 
 app = FastAPI()
 
@@ -86,38 +88,39 @@ async def predict(
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {ext or 'unknown'}")
 
-    # Generate our own safe on-disk name (also fixes the old collision bug,
-    # where two users uploading "video.mp4" at once shared one temp file).
-    safe_name = f"{uuid.uuid4().hex}{ext}"
-
-    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
-        size = 0
-        while chunk := await file.read(1024 * 1024):
-            size += len(chunk)
-            if size > MAX_FILE_SIZE:
-                tmp.close()
-                os.remove(tmp.name)
-                raise HTTPException(status_code=413, detail="File too large (max 50MB)")
-            tmp.write(chunk)
-        file_location = tmp.name
-
+    # The upload only ever lives in a temp file. The finally block below
+    # deletes it on every path: success, too-large, or a model error.
+    fd, tmp_path = tempfile.mkstemp(suffix=ext)
     try:
-        label, confidence = predict_file(file_location)
+        size = 0
+        with os.fdopen(fd, "wb") as tmp:
+            while chunk := await file.read(1024 * 1024):
+                size += len(chunk)
+                if size > MAX_FILE_SIZE:
+                    raise HTTPException(status_code=413, detail="File too large (max 50MB)")
+                tmp.write(chunk)
 
-        # Save permanently in user's folder, under our generated safe name
-        user_folder = os.path.join("uploads", f"user_{current_user.id}")
-        os.makedirs(user_folder, exist_ok=True)
-        permanent_path = os.path.join(user_folder, safe_name)
-        shutil.copy(file_location, permanent_path)
+        # predict_file is blocking (OpenCV + PyTorch); run it in a worker
+        # thread so it doesn't freeze the event loop for other requests.
+        try:
+            label, confidence = await run_in_threadpool(predict_file, tmp_path)
+        except Exception:
+            logger.exception("Inference failed")
+            raise HTTPException(status_code=500, detail="Analysis failed. Please try another file.")
     finally:
-        os.remove(file_location)
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
-    # Log to database — original_name is stored only for display, never
-    # used to build a filesystem path
+    # Decode failures come back as label "Error"; report them as an error
+    # instead of saving a bogus scan to the user's history.
+    if label == "Error":
+        raise HTTPException(status_code=422, detail="Could not read this file. Try a different image or video.")
+
+    # Only the result is stored: the original name (display only),
+    # the label and the confidence. The upload itself is never kept.
     scan = db_models.Scan(
         user_id=current_user.id,
         filename=original_name,
-        file_path=permanent_path,
         result=label,
         confidence=confidence,
     )

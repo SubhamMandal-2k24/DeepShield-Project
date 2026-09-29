@@ -38,13 +38,14 @@ function Home() {
         <HeroScene />
         <div className="hero-content">
           <AnimatedText as="span" className="eyebrow">
-            NEXT-GEN MEDIA FORENSICS
+            DEEPFAKE DETECTION PROJECT
           </AnimatedText>
           <AnimatedText as="h1" delay={0.1}>
             See Through Every <span className="text-gradient">DeepFake</span>
           </AnimatedText>
           <AnimatedText as="p" delay={0.2}>
-            Upload a video or image and let AI analyze authenticity in seconds.
+            Upload a video or image and let a deep learning model check it for
+            signs of manipulation.
           </AnimatedText>
 
           <motion.div
@@ -112,7 +113,7 @@ function Home() {
           {[
             { title: "Upload Video/Image", desc: "Select your file securely." },
             { title: "AI Analysis", desc: "Model checks manipulation patterns." },
-            { title: "Instant Result", desc: "Real or Deepfake detection." },
+            { title: "Clear Result", desc: "A real or fake verdict with a confidence score." },
           ].map((item, i) => (
             <AnimatedText key={item.title} delay={i * 0.15}>
               <GlassCard className="card">
@@ -125,18 +126,24 @@ function Home() {
         </div>
       </section>
 
-     {/* 3. WHY IT'S RELIABLE */}
+      {/* 3. BY THE NUMBERS */}
       <section className="section stats-section">
         <AnimatedText as="h2" className="section-title">
-          Why It's Reliable
+          By the Numbers
         </AnimatedText>
 
         <div className="stats-grid">
-          <Counter to={75} suffix="%" label="Detection Accuracy" />
-          <Counter to={800} suffix="+" label="Scans Completed" />
-          <Counter to={1} suffix="" label="AI Model (ResNet50)" />
-          <Counter to={30} suffix="s" label="Avg. Analysis Time" />
+          <Counter to={75} suffix="%" label="Validation Accuracy (frame-level)" />
+          <Counter to={10} suffix="" label="Frames Sampled per Video" />
+          <Counter to={30} suffix="s" label="Typical Analysis Time (live demo)" />
         </div>
+
+        <AnimatedText delay={0.1}>
+          <p className="stats-note">
+            Accuracy is measured on a held-out split of FaceForensics++ frames.
+            Results on other kinds of media may be lower.
+          </p>
+        </AnimatedText>
 
         <div className="stats-grid stats-grid-secondary">
           {[
@@ -194,9 +201,9 @@ function Home() {
           </AnimatedText>
           <div className="why-list">
             {[
-              { title: "Trained on Real-World Data", desc: "Built using the FaceForensics++ benchmark dataset." },
-              { title: "Frame-Level Precision", desc: "Analyzes manipulation patterns frame by frame, not just metadata." },
-              { title: "Fast & Private", desc: "Your uploads are processed securely and never stored longer than needed." },
+              { title: "Built on a Benchmark Dataset", desc: "Trained on the FaceForensics++ DeepFakeDetection subset." },
+              { title: "Frame-Level Analysis", desc: "Samples 10 frames per video and averages the model's predictions." },
+              { title: "Private by Design", desc: "Uploads are analyzed and deleted right away. Only your result is saved to your history." },
             ].map((item, i) => (
               <AnimatedText key={item.title} delay={i * 0.15}>
                 <div className="why-item">
@@ -208,7 +215,6 @@ function Home() {
           </div>
         </div>
       </section>
-      
 
       <Footer />
     </div>

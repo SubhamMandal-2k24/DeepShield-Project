@@ -1,26 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import AnimatedText from "../components/AnimatedText";
 import GlassCard from "../components/GlassCard";
 import Footer from "../components/Footer";
 import ContactScene from "../components/ContactScene";
 import "./Contact.css";
 
-const roles = [
-  "Full-Stack Engineer",
-  "Deep Learning Practitioner",
-  "AI/ML Builder",
-];
-
 const contactMethods = [
-  {
-    label: "Phone",
-    value: "+91 7488074287",
-    href: "tel:+917488074287",
-    icon: "TEL",
-    copyValue: "+917488074287",
-  },
   {
     label: "Email",
     value: "2k24.csds1d.2413905@gmail.com",
@@ -44,21 +31,36 @@ const contactMethods = [
   },
 ];
 
-function Contact() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [copiedLabel, setCopiedLabel] = useState("");
+const quickFacts = [
+  { icon: "1", text: "Builder of DeepShield, an AI deepfake detection platform" },
+  { icon: "2", text: "Comfortable across the stack: React, FastAPI, MySQL" },
+  { icon: "3", text: "Focused on applied deep learning and computer vision" },
+  { icon: "4", text: "300+ LeetCode problems solved" },
+];
 
+function Contact() {
+  const [copiedLabel, setCopiedLabel] = useState("");
+  const resetTimer = useRef(null);
+
+  // Clear any pending timeout when the page unmounts
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % roles.length);
-    }, 2200);
-    return () => clearInterval(interval);
+    return () => {
+      if (resetTimer.current) clearTimeout(resetTimer.current);
+    };
   }, []);
 
-  const handleCopy = (label, value) => {
-    navigator.clipboard.writeText(value);
-    setCopiedLabel(label);
-    setTimeout(() => setCopiedLabel(""), 1500);
+  const handleCopy = async (label, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedLabel(label);
+    } catch (err) {
+      // Clipboard can be blocked (non-HTTPS, permissions); show a fallback
+      setCopiedLabel("");
+      window.prompt("Copy this manually:", value);
+      return;
+    }
+    if (resetTimer.current) clearTimeout(resetTimer.current);
+    resetTimer.current = setTimeout(() => setCopiedLabel(""), 1500);
   };
 
   return (
@@ -74,25 +76,15 @@ function Contact() {
           </AnimatedText>
 
           <div className="rotating-role">
-            <span>Currently working as a</span>
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={roles[roleIndex]}
-                className="rotating-role-text"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4 }}
-              >
-                {roles[roleIndex]}
-              </motion.span>
-            </AnimatePresence>
+            <span className="rotating-role-text">
+              B.Tech CSE (Data Science) Student
+            </span>
           </div>
 
           <AnimatedText delay={0.3}>
             <span className="availability-badge">
               <span className="availability-dot"></span>
-              Open to opportunities
+              Open to internships
             </span>
           </AnimatedText>
         </div>
@@ -101,56 +93,43 @@ function Contact() {
       <section className="contact-body">
         <AnimatedText delay={0.1} className="contact-info-wrap">
           <GlassCard className="contact-info-card">
-            <img
-              src="/images/Subham.jpeg"
-              alt="Subham Mandal"
-              className="contact-avatar-img"
-            />
             <h3>Subham Mandal</h3>
             <p className="contact-role">
-              Full-Stack Engineer &middot; Deep Learning Practitioner
+              B.Tech CSE (Data Science) &middot; Full-Stack & ML Projects
             </p>
           </GlassCard>
         </AnimatedText>
 
         <div className="contact-methods-grid">
-          {contactMethods.map((method, i) => {
-            const isExternal = method.external === true;
-            return (
-              <AnimatedText key={method.label} delay={0.15 + i * 0.08}>
-                <GlassCard className="contact-method-card">
-                  <div className="contact-method-top">
-                    <span className="contact-method-icon">{method.icon}</span>
-                    <span className="contact-method-label">{method.label}</span>
-                  </div>
+          {contactMethods.map((method, i) => (
+            <AnimatedText key={method.label} delay={0.15 + i * 0.08}>
+              <GlassCard className="contact-method-card">
+                <div className="contact-method-top">
+                  <span className="contact-method-icon">{method.icon}</span>
+                  <span className="contact-method-label">{method.label}</span>
+                </div>
 
-                  {isExternal ? (
-                    <a
-                      href={method.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="contact-method-value"
-                    >
-                      {method.value}
-                    </a>
-                  ) : (
-                    <a href={method.href} className="contact-method-value">
-                      {method.value}
-                    </a>
-                  )}
+                <a
+                  href={method.href}
+                  className="contact-method-value"
+                  {...(method.external
+                    ? { target: "_blank", rel: "noreferrer" }
+                    : {})}
+                >
+                  {method.value}
+                </a>
 
-                  {method.copyValue ? (
-                    <button
-                      className="copy-btn"
-                      onClick={() => handleCopy(method.label, method.copyValue)}
-                    >
-                      {copiedLabel === method.label ? "Copied!" : "Copy"}
-                    </button>
-                  ) : null}
-                </GlassCard>
-              </AnimatedText>
-            );
-          })}
+                {method.copyValue ? (
+                  <button
+                    className="copy-btn"
+                    onClick={() => handleCopy(method.label, method.copyValue)}
+                  >
+                    {copiedLabel === method.label ? "Copied!" : "Copy"}
+                  </button>
+                ) : null}
+              </GlassCard>
+            </AnimatedText>
+          ))}
         </div>
       </section>
 
@@ -159,12 +138,7 @@ function Contact() {
           A bit more about my work
         </AnimatedText>
         <div className="quick-facts-grid">
-          {[
-            { icon: "1", text: "Builder of DeepShield, an AI deepfake detection platform" },
-            { icon: "2", text: "Comfortable across the stack: React, FastAPI, MySQL" },
-            { icon: "3", text: "Focused on applied deep learning and computer vision" },
-            { icon: "4", text: "Usually replies within 24 hours" },
-          ].map((fact, i) => (
+          {quickFacts.map((fact, i) => (
             <AnimatedText key={fact.text} delay={i * 0.1}>
               <GlassCard className="fact-card">
                 <span className="fact-card-icon">{fact.icon}</span>
