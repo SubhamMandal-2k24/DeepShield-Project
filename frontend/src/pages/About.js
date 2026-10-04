@@ -104,8 +104,8 @@ function About() {
           <GlassCard className="about-card">
             <p>
               The core detection engine is built using a ResNet50-based convolutional
-              neural network implemented in PyTorch. The model leverages transfer
-              learning to extract high-level visual features from video frames. Each
+              neural network implemented in PyTorch. The model extracts
+              high-level visual features from video frames. Each
               frame is resized to 224×224 resolution and normalized using ImageNet
               statistics before being passed through the network.
             </p>
@@ -141,8 +141,8 @@ function About() {
         </div>
         <AnimatedText delay={0.2}>
           <p className="methodology-note">
-            By averaging predictions across multiple frames, the system reduces noise
-            and improves robustness against false detections.
+            By averaging predictions across multiple frames, the system smooths out
+            the noise from any single frame.
           </p>
         </AnimatedText>
       </section>
@@ -168,8 +168,8 @@ function About() {
         </AnimatedText>
         <AnimatedText delay={0.1}>
           <p className="architecture-intro">
-            The application follows a modular full-stack architecture, ensuring
-            separation of concerns, scalability, and real-time inference capability.
+            The application follows a modular full-stack architecture, keeping
+            the interface, the API and the model separate from each other.
           </p>
         </AnimatedText>
         <div className="architecture-flow">
@@ -199,13 +199,13 @@ function About() {
             <p>
               Deepfake technology poses significant threats in areas such as
               misinformation, political manipulation, identity fraud, and cybercrime.
-              This system aims to contribute toward digital media verification and
+              This project is a small step toward digital media verification and
               responsible AI deployment.
             </p>
             <p>
               By providing confidence-based predictions and automated analysis, the
-              platform supports efforts in digital forensics, journalism verification,
-              cybersecurity, and ethical AI research.
+              platform points toward uses in digital forensics, journalism
+              verification and ethical AI research.
             </p>
           </GlassCard>
         </AnimatedText>

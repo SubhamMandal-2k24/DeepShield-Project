@@ -8,6 +8,23 @@ import heroScan from "../assets/images/hero-scan.jpg";
 import neuralNetwork from "../assets/images/neural-network.jpg";
 import "./Detect.css";
 
+const MAX_FILE_MB = 50;
+const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".mp4", ".mov", ".avi", ".webm"];
+
+// Turn an HTTP status (and the server's own message, if any) into text a
+// visitor can act on, instead of one generic "error connecting" alert.
+function errorMessage(status, detail) {
+  if (status === 413) return `File too large. The limit is ${MAX_FILE_MB} MB.`;
+  if (status === 400 || status === 422) {
+    return detail || "This file couldn't be processed. Try a different image or video.";
+  }
+  if (status === 500) return "Analysis failed. Please try another file.";
+  if (status === 502 || status === 503 || status === 504) {
+    return "The server is waking up or restarting. Wait a minute and try again.";
+  }
+  return "Something went wrong. Please try again.";
+}
+
 function Detect() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -15,8 +32,9 @@ function Detect() {
   const [confidence, setConfidence] = useState(0);
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [error, setError] = useState("");
   const fileInputRef = useRef(null);
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
 
   useEffect(() => {
     return () => {
@@ -26,6 +44,19 @@ function Detect() {
 
   const applyFile = (selected) => {
     if (!selected) return;
+
+    // Drag-and-drop skips the file picker's "accept" filter, so check here too.
+    const name = selected.name.toLowerCase();
+    if (!ALLOWED_EXTENSIONS.some((ext) => name.endsWith(ext))) {
+      setError("Unsupported file type. Use JPG, PNG, MP4, MOV, AVI or WEBM.");
+      return;
+    }
+    if (selected.size > MAX_FILE_MB * 1024 * 1024) {
+      setError(`File too large. The limit is ${MAX_FILE_MB} MB.`);
+      return;
+    }
+
+    setError("");
     setFile(selected);
     setPreview(URL.createObjectURL(selected));
     setResult("");
@@ -54,7 +85,7 @@ function Detect() {
 
   const handleUpload = async () => {
     if (!file) {
-      alert("Select a file first");
+      setError("Select a file first.");
       return;
     }
 
@@ -64,8 +95,10 @@ function Detect() {
     try {
       setLoading(true);
       setResult("");
+      setError("");
 
-      const response = await fetch(`${API_BASE}/predict`, {        method: "POST",
+      const response = await fetch(`${API_BASE}/predict`, {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,16 +106,32 @@ function Detect() {
       });
 
       if (!response.ok) {
-        throw new Error("Server error");
+        // 401 means the login expired: clear it and let the route guard
+        // send the user back to the login page.
+        if (response.status === 401) {
+          logout();
+          return;
+        }
+
+        let detail = "";
+        try {
+          const body = await response.json();
+          if (typeof body.detail === "string") detail = body.detail;
+        } catch (_) {
+          // response had no JSON body; fall back to the status message
+        }
+        setError(errorMessage(response.status, detail));
+        return;
       }
 
       const data = await response.json();
-      console.log(data);
       setResult(data.result);
       setConfidence(data.confidence);
-    } catch (error) {
-      console.error(error);
-      alert("Error connecting to backend.");
+    } catch (err) {
+      // fetch itself failed: no connection, or the server is still asleep
+      setError(
+        "Couldn't reach the server. If it has been idle it may still be waking up. Wait a minute and try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -94,6 +143,7 @@ function Detect() {
     setPreview(null);
     setResult("");
     setConfidence(0);
+    setError("");
   };
 
   return (
@@ -110,8 +160,9 @@ function Detect() {
             </AnimatedText>
             <AnimatedText delay={0.2}>
               <p className="detect-intro-text">
-                Upload a video or image below. Our model analyzes it frame by
-                frame and returns a confidence-scored verdict in seconds.
+                Upload a video or image below. The model samples frames from it
+                and returns a confidence-scored verdict. The first request
+                after a pause can take a minute while the server wakes up.
               </p>
             </AnimatedText>
           </div>
@@ -148,7 +199,7 @@ function Detect() {
             >
               <input
                 type="file"
-                accept="image/jpeg,image/png,video/mp4,video/quicktime,video/webm"
+                accept="image/jpeg,image/png,video/mp4,video/quicktime,video/webm,video/x-msvideo,.avi"
                 ref={fileInputRef}
                 onChange={handleFileChange}
                 style={{ display: "none" }}
@@ -182,6 +233,12 @@ function Detect() {
             >
               {loading ? "Analyzing..." : "Analyze Media"}
             </motion.button>
+
+            {error && (
+              <p className="detect-error" role="alert">
+                {error}
+              </p>
+            )}
 
             {loading && <div className="spinner"></div>}
 

@@ -38,7 +38,7 @@ function Home() {
         <HeroScene />
         <div className="hero-content">
           <AnimatedText as="span" className="eyebrow">
-            DEEPFAKE DETECTION 
+            DEEPFAKE DETECTION
           </AnimatedText>
           <AnimatedText as="h1" delay={0.1}>
             See Through Every <span className="text-gradient">DeepFake</span>
@@ -136,15 +136,8 @@ function Home() {
           <Counter to={75} suffix="%" label="Validation Accuracy (frame-level)" />
           <Counter to={10} suffix="" label="Frames Sampled per Video" />
           <Counter to={15} suffix="s" label="Typical Analysis Time (live demo)" />
-          <Counter to={30} suffix="MB" label="Max Upload Size" />
+          <Counter to={50} suffix="MB" label="Max Upload Size" />
         </div>
-
-        <AnimatedText delay={0.1}>
-          <p className="stats-note">
-            Accuracy is measured on a held-out split of FaceForensics++ frames.
-            Results on other kinds of media may be lower.
-          </p>
-        </AnimatedText>
 
         <div className="stats-grid stats-grid-secondary">
           {[

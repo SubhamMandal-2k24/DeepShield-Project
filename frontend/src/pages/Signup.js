@@ -60,8 +60,10 @@ function Signup() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
+              maxLength={72}
             />
+            <p className="auth-hint">Use at least 8 characters.</p>
 
             {error && <p className="auth-error">{error}</p>}
 

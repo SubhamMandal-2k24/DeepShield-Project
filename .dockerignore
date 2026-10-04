@@ -1,0 +1,30 @@
+# Keep the Render build small and fast: none of this is needed at runtime.
+# (Models/ and requirements.txt must NOT be listed here, the backend needs them.)
+
+.git
+.github
+.vscode
+.env
+.gitignore
+
+# Python junk
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+
+# Frontend is deployed separately on Vercel
+frontend/
+
+# Training data and uploads
+Data/
+Frames/
+frames/
+uploads/
+
+# Docs and one-off scripts
+README.md
+LICENSE
+faceforensics_download_v4.py
+scripts/

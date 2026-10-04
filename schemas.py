@@ -1,11 +1,13 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
 
 class UserCreate(BaseModel):
-    name: str
+    name: str = Field(min_length=1, max_length=100)   # matches users.name VARCHAR(100)
     email: EmailStr
-    password: str
+    # bcrypt only uses the first 72 bytes, so longer passwords are rejected
+    # instead of being silently truncated.
+    password: str = Field(min_length=8, max_length=72)
 
 
 class UserLogin(BaseModel):
