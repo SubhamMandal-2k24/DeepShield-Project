@@ -29,13 +29,20 @@ const contactMethods = [
     icon: "GH",
     external: true,
   },
+    {
+    label: "LeetCode",
+    value: "leetcode.com/u/Subham_Mandal_2006",
+    href: "https://leetcode.com/u/Subham_Mandal_2006",
+    icon: "LC",
+    external: true,
+  },
 ];
 
 const quickFacts = [
   { icon: "1", text: "Builder of DeepShield, an AI deepfake detection platform" },
-  { icon: "2", text: "Comfortable across the stack: React, FastAPI, MySQL" },
-  { icon: "3", text: "Focused on applied deep learning and computer vision" },
-  { icon: "4", text: "300+ LeetCode problems solved" },
+  { icon: "2", text: "Building RadiantXAI, an explainable chest X-ray classifier with Grad-CAM" },
+  { icon: "3", text: "Hands-on with React, FastAPI, MySQL, PyTorch, OpenCV and Docker" },
+  { icon: "4", text: "Focused on applied deep learning and computer vision" },
 ];
 
 function Contact() {
@@ -95,7 +102,7 @@ function Contact() {
           <GlassCard className="contact-info-card">
             <h3>Subham Mandal</h3>
             <p className="contact-role">
-              B.Tech CSE (Data Science) &middot; Full-Stack & ML Projects
+              B.Tech CSE (Data Science) &middot; Building Full-Stack & ML Projects
             </p>
           </GlassCard>
         </AnimatedText>

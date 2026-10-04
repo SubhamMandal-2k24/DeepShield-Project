@@ -38,7 +38,7 @@ function Home() {
         <HeroScene />
         <div className="hero-content">
           <AnimatedText as="span" className="eyebrow">
-            DEEPFAKE DETECTION PROJECT
+            DEEPFAKE DETECTION 
           </AnimatedText>
           <AnimatedText as="h1" delay={0.1}>
             See Through Every <span className="text-gradient">DeepFake</span>
@@ -135,7 +135,8 @@ function Home() {
         <div className="stats-grid">
           <Counter to={75} suffix="%" label="Validation Accuracy (frame-level)" />
           <Counter to={10} suffix="" label="Frames Sampled per Video" />
-          <Counter to={30} suffix="s" label="Typical Analysis Time (live demo)" />
+          <Counter to={15} suffix="s" label="Typical Analysis Time (live demo)" />
+          <Counter to={30} suffix="MB" label="Max Upload Size" />
         </div>
 
         <AnimatedText delay={0.1}>
