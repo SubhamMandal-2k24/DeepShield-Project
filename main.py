@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.concurrency import run_in_threadpool
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+import asyncio
 import logging
 import os
 import tempfile
@@ -15,11 +16,20 @@ from auth import hash_password, verify_password, create_access_token, get_curren
 
 logger = logging.getLogger("deepshield")
 
+# Only one scan runs inference at a time. Render's free tier has 512MB RAM,
+# and two PyTorch forward passes in parallel can exceed it. Extra requests
+# simply wait their turn.
+inference_slot = asyncio.Semaphore(1)
+
 app = FastAPI()
 
 Base.metadata.create_all(bind=engine)
 
-origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+origins = [
+    o.strip()
+    for o in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    if o.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
@@ -101,9 +111,11 @@ async def predict(
                 tmp.write(chunk)
 
         # predict_file is blocking (OpenCV + PyTorch); run it in a worker
-        # thread so it doesn't freeze the event loop for other requests.
+        # thread so it doesn't freeze the event loop for other requests,
+        # but let only one inference run at a time to stay under the RAM cap.
         try:
-            label, confidence = await run_in_threadpool(predict_file, tmp_path)
+            async with inference_slot:
+                label, confidence = await run_in_threadpool(predict_file, tmp_path)
         except Exception:
             logger.exception("Inference failed")
             raise HTTPException(status_code=500, detail="Analysis failed. Please try another file.")
