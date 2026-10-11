@@ -31,7 +31,6 @@ function Navbar() {
     { to: "/about", label: "About" },
     { to: "/detect", label: "Detect" },
     { to: "/history", label: "History" },
-    { to: "/contact", label: "Contact" },
   ];
 
   const allLinks = token ? protectedLinks : [];

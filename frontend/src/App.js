@@ -8,7 +8,6 @@ import Detect from "./pages/Detect";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import History from "./pages/History";
-import Contact from "./pages/Contact";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 
@@ -55,14 +54,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <Detect />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <ProtectedRoute>
-                <Contact />
               </ProtectedRoute>
             }
           />
